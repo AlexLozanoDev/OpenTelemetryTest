@@ -1,0 +1,21 @@
+{
+	"folders": [
+		{
+			"path": "../../.."
+		},
+		{
+			"name": "table-service",
+			"path": "../../../../table-service"
+		},
+		{
+			"name": "reservation-service",
+			"path": "../../../../reservation-service"
+		},
+		{
+			"path": "../../../../Docker"
+		}
+	],
+	"settings": {
+		"java.configuration.updateBuildConfiguration": "interactive"
+	}
+}

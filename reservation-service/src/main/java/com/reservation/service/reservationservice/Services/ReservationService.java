@@ -13,6 +13,10 @@ import com.reservation.service.reservationservice.Models.TableModel;
 import com.reservation.service.reservationservice.Models.UserModel;
 import com.reservation.service.reservationservice.Repositories.IReservationRepository;
 
+import io.opentelemetry.api.GlobalOpenTelemetry;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
+
 
 
 
@@ -26,18 +30,25 @@ public class ReservationService {
     private final String tablesApiUrl = "http://localhost:8082";
     private final RestTemplate restTemplate = new RestTemplate();
 
+    Tracer tracer = GlobalOpenTelemetry.getTracer("Instrumentation name", "1.0");
+
+
     public RevervationModel makeReservation(RevervationModel reservation) {
-        
+
+        Span span = tracer.spanBuilder("rollTheDice").startSpan();
+
+        span.setAttribute("Body request", reservation.getUserId());
         UserModel user = getUserById(reservation.getUserId());
         if (user == null) {
             user = registerUser();
         }
-
+        
         
         TableModel table = getTableById(reservation.getTableId());
         if (table != null && table.getAvailable()) {
             reservation.setUserId(user.getId());
             updateTableAvailability(table.getId());
+            span.end();
             return reservationRepository.save(reservation);
         } else {
             return null; 

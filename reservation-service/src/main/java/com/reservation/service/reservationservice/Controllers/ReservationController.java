@@ -18,11 +18,17 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+
+import io.opentelemetry.api.GlobalOpenTelemetry;
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.api.trace.Tracer;
+
 @RestController
 @RequestMapping("/reservation")
 public class ReservationController {
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(ReservationController.class);
+    Tracer tracer = GlobalOpenTelemetry.getTracer("Instrumentation name", "1.0");
 
 
     @Autowired
@@ -30,14 +36,18 @@ public class ReservationController {
 
     @PostMapping
     public RevervationModel makeReservation(@RequestBody RevervationModel revervationModel) {
+        Span span = tracer.spanBuilder("rollTheDice").startSpan();
 
+        span.setAttribute("Body request", revervationModel.getUserId());
 
         RevervationModel createdReservation = reservationService.makeReservation(revervationModel);
         if (createdReservation != null) {
             LOGGER.info("Se creo una nueva reservacion con id: " + createdReservation.getId());
+            span.end();
             return createdReservation;
         } else {
             LOGGER.info("No se pudo hacer la reservacion, la mesa esta ocupada");
+            span.end();
             return null;
         }
     }

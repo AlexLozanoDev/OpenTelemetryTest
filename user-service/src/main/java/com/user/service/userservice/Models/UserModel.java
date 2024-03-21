@@ -10,7 +10,7 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "user")
 public class UserModel {
-        
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -31,7 +31,6 @@ public class UserModel {
     public Long getId() {
         return id;
     }
-
 
     public void setFirstName(String firsName) {
         this.firstName = firsName;
@@ -57,4 +56,3 @@ public class UserModel {
         return email;
     }
 }
-

@@ -21,6 +21,15 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	implementation(platform("io.opentelemetry:opentelemetry-bom:1.36.0"));
+    implementation("io.opentelemetry:opentelemetry-api");
+    implementation("io.opentelemetry:opentelemetry-sdk");
+    implementation("io.opentelemetry:opentelemetry-exporter-logging");
+    implementation("io.opentelemetry.semconv:opentelemetry-semconv:1.23.1-alpha");
+	implementation 'io.opentelemetry:opentelemetry-exporter-otlp:1.31.0' 
+	implementation("io.opentelemetry:opentelemetry-sdk-extension-autoconfigure");
+
 }
 
 tasks.named('test') {

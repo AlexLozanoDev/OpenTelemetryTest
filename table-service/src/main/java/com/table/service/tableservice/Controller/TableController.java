@@ -12,6 +12,9 @@ import org.springframework.web.bind.annotation.RestController;
 import com.table.service.tableservice.Model.TableModel;
 import com.table.service.tableservice.Service.TableService;
 
+import io.opentelemetry.api.trace.Span;
+import io.opentelemetry.context.Scope;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -36,20 +39,56 @@ public class TableController {
 
     @PostMapping
     public TableModel saveTable (@RequestBody TableModel tableModel){
-        LOGGER.info("Se creo una mesa nueva");
-        return this.tableService.saveTable(tableModel);
+        Span span = Span.current();
+        try (Scope scope = span.makeCurrent()) {
+            span.setAttribute("body.TableCapacity", tableModel.getAvailable());
+            
+            LOGGER.info("Se creo una mesa nueva");
+            return this.tableService.saveTable(tableModel);
+
+        } catch (Throwable e) {
+            span.recordException(e);
+            throw e;
+        } finally {
+            span.end();
+        }
     }
 
     @GetMapping(path = "/{id}")
     public Optional<TableModel> getTableById(@PathVariable("id") Long id){
-        LOGGER.info("Se consulto la mesa " + id);
-        return this.tableService.getTableById(id);
+
+        Span span = Span.current();
+        try (Scope scope = span.makeCurrent()) {
+            span.setAttribute("body.TableId", id);
+            
+            LOGGER.info("Se consulto la mesa " + id);
+            return this.tableService.getTableById(id);
+
+        } catch (Throwable e) {
+            span.recordException(e);
+            throw e;
+        } finally {
+            span.end();
+        }
+
     }
 
     @PutMapping(path = "/{id}")
     public TableModel updateAvailabilityTable(@RequestBody TableModel request, @PathVariable("id") Long id){
-        LOGGER.info("Se actializo la mesa " + id);
-        return this.tableService.updateTableDisponibility(id, request.getAvailable());
+        Span span = Span.current();
+        try (Scope scope = span.makeCurrent()) {
+            span.setAttribute("body.TableId", id);
+            
+            LOGGER.info("Se actializo la mesa " + id);
+            return this.tableService.updateTableDisponibility(id, request.getAvailable());
+
+        } catch (Throwable e) {
+            span.recordException(e);
+            throw e;
+        } finally {
+            span.end();
+        }
+
     }
 
 }

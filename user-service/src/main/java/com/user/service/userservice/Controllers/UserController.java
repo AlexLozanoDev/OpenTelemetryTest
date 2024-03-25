@@ -33,7 +33,7 @@ public class UserController {
     @Autowired
     private UserService userService;
     // UserController(OpenTelemetry openTelemetry) {
-    // tracer = openTelemetry.getTracer(UserController.class.getName(), "0.1.0");
+    //     tracer = openTelemetry.getTracer(UserController.class.getName(), "0.1.0");
     // }
 
     @GetMapping
@@ -44,6 +44,7 @@ public class UserController {
 
     @PostMapping
     public UserModel saveUser(@RequestBody UserModel user) {
+        // Span span = tracer.spanBuilder("Post User").startSpan();
         Span span = Span.current();
         try (Scope scope = span.makeCurrent()) {
             span.setAttribute("body.UserEmail", user.getEmail());
@@ -61,6 +62,7 @@ public class UserController {
 
     @GetMapping(path = "/{id}")
     public Optional<UserModel> getUserById(@PathVariable("id") Long id) {
+        // Span span = tracer.spanBuilder("Get User").startSpan();
         Span span = Span.current();
         try (Scope scope = span.makeCurrent()) {
             span.setAttribute("body.UserId", id);
@@ -78,11 +80,11 @@ public class UserController {
 
     @PutMapping(path = "/{id}")
     public UserModel updateUserById(@RequestBody UserModel request, @PathVariable("id") Long id) {
-
+        // Span span = tracer.spanBuilder("Put User").startSpan();
         Span span = Span.current();
         try (Scope scope = span.makeCurrent()) {
             span.setAttribute("body.UserId", id);
-            
+
             logger.info("Se realizó un update al usuario " + id);
             return this.userService.updateById(request, id);
 
@@ -96,11 +98,11 @@ public class UserController {
 
     @DeleteMapping(path = "/{id}")
     public String deleteById(@PathVariable("id") Long id) {
-
+        // Span span = tracer.spanBuilder("Delete User").startSpan();
         Span span = Span.current();
         try (Scope scope = span.makeCurrent()) {
             span.setAttribute("body.UserId", id);
-            
+
             boolean ok = this.userService.deleteUser(id);
             if (ok) {
                 logger.info("Se borro el usuario " + id);

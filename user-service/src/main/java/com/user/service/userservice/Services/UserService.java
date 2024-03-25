@@ -12,26 +12,36 @@ import com.user.service.userservice.Repositories.IUserRepository;
 
 // import io.opentelemetry.api.OpenTelemetry;
 import io.opentelemetry.api.trace.Span;
-import io.opentelemetry.api.trace.Tracer;
+// import io.opentelemetry.api.trace.Tracer;
+// import io.opentelemetry.context.Context;
 // import io.opentelemetry.context.Context;
 import io.opentelemetry.context.Scope;
 
 @Service
 public class UserService {
 
-    Tracer tracer;
+    // Tracer tracer;
 
     @Autowired
     IUserRepository userRepository;
     // UserService(OpenTelemetry openTelemetry) {
-    //     tracer = openTelemetry.getTracer(UserController.class.getName(), "0.1.0");
+    //     tracer = openTelemetry.getTracer(UserService.class.getName(), "0.1.0");
     // }
 
     public ArrayList<UserModel> getUsers(){
-        return (ArrayList<UserModel>) userRepository.findAll();
+        // Span span = tracer.spanBuilder("getUsers").setParent(Context.current()).startSpan();
+        Span span = Span.current();
+        try {
+            
+            return (ArrayList<UserModel>) userRepository.findAll();
+
+        } finally {
+            span.end();
+        }
     }
 
     public UserModel saveUser(UserModel user){
+        // Span span = tracer.spanBuilder("saveUsers").setParent(Context.current()).startSpan();
         Span span = Span.current();
         try (Scope scope = span.makeCurrent()) {
             span.setAttribute("body.UserEmail", user.getEmail());

@@ -1,6 +1,5 @@
 package com.apiprueba.apiprueba.Controllers;
 
-import java.beans.JavaBean;
 import java.util.ArrayList;
 import java.util.Optional;
 

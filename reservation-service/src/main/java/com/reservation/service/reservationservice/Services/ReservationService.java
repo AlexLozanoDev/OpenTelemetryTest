@@ -109,6 +109,7 @@ public class ReservationService {
         Span span = Span.current();
         try (Scope scope = span.makeCurrent()){
             span.setAttribute("body.TableId", tableId);
+            
             String requestUrl = tablesApiUrl + "/table/" + tableId;
             java.util.Map<String, Boolean> requestBody = new HashMap<>();
             requestBody.put("available", false);

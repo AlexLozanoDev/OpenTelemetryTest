@@ -49,7 +49,7 @@ public class ClientController {
     public ClientModel saveUser(@RequestBody ClientModel user) throws Throwable {
         String requestBodyJson = objectMapper.writeValueAsString(user);//Se convierte el request a string
         Span span = Span.current(); //Se obtiene el span actual
-        try (Scope scope = span.makeCurrent()) {
+        try (Scope scope = span.makeCurrent()) {   
             span.setAttribute("body.request", requestBodyJson); //Se agrega el request como atributo del span
 
             logger.info("Consultando usuario");
@@ -60,8 +60,9 @@ public class ClientController {
 
             return response;
 
+
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error al serializar el objeto a JSON", e);
+            throw new RuntimeException("Error al deserealizar el objeto", e);
         } catch (Throwable e) {//En caso de error se arroja un exception en el span y se establece el status
             span.recordException(e);
             span.setStatus(StatusCode.ERROR, e.toString());

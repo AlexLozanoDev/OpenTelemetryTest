@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.client.RestTemplate;
+// import org.springframework.web.client.RestTemplate;
 
 import com.apiprueba.apiprueba.Models.UserModel;
 import com.apiprueba.apiprueba.Services.UserService;
@@ -27,16 +27,16 @@ import ch.qos.logback.classic.Logger;
 @RequestMapping("/user")
 public class UserController {
 
-    private final RestTemplate restTemplate;
+    // private final RestTemplate restTemplate;
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(UserController.class);
     
     @Autowired
     private UserService userService;
     
-    UserController(RestTemplate restTemplate){
-        this.restTemplate = restTemplate;
-    }
+    // UserController(RestTemplate restTemplate){
+    //     this.restTemplate = restTemplate;
+    // }
     
     @GetMapping
     public ArrayList<UserModel> getUsers(){

@@ -27,7 +27,7 @@ import ch.qos.logback.classic.Logger;
 @RequestMapping("/user")
 public class UserController {
 
-    private final RestTemplate restTemplate;
+    // private final RestTemplate restTemplate;
 
     private static final Logger LOGGER = (Logger) LoggerFactory.getLogger(UserController.class);
     
@@ -35,7 +35,7 @@ public class UserController {
     private UserService userService;
     
     UserController(RestTemplate restTemplate){
-        this.restTemplate = restTemplate;
+        // this.restTemplate = restTemplate;
     }
     
     @GetMapping

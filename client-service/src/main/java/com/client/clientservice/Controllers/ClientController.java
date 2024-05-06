@@ -47,40 +47,42 @@ public class ClientController {
 
     @PostMapping
     public ClientModel saveUser(@RequestBody ClientModel user) throws Throwable {
-        String requestBodyJson = objectMapper.writeValueAsString(user);
-        Span span = Span.current();
-        try (Scope scope = span.makeCurrent()) {
-            span.setAttribute("body.request", requestBodyJson);
+        String requestBodyJson = objectMapper.writeValueAsString(user);//Se convierte el request a string
+        Span span = Span.current(); //Se obtiene el span actual
+        try (Scope scope = span.makeCurrent()) {   
+            span.setAttribute("body.request", requestBodyJson); //Se agrega el request como atributo del span
 
             logger.info("Consultando usuario");
             ClientModel response = this.userService.saveUser(user);
 
-            String responseBody = objectMapper.writeValueAsString(response);
-            span.setAttribute("body.response", responseBody);
+            String responseBody = objectMapper.writeValueAsString(response);//Se convierte el response a string
+            span.setAttribute("body.response", responseBody);//Se agrega el response a atributo del span
 
             return response;
 
+
         } catch (JsonProcessingException e) {
-            throw new RuntimeException("Error al serializar el objeto a JSON", e);
-        } catch (Throwable e) {
+            throw new RuntimeException("Error al deserealizar el objeto", e);
+        } catch (Throwable e) {//En caso de error se arroja un exception en el span y se establece el status
             span.recordException(e);
             span.setStatus(StatusCode.ERROR, e.toString());
             throw e;
-        } finally {
+        } finally {//Se termina el span
             span.end();
         }
     }
 
     @GetMapping(path = "/{linea}")
     public Optional<ClientModel> getUserByLinea(@PathVariable("linea") String linea) throws Throwable {
-        Span span = Span.current();
+        Span span = Span.current(); //Se obtiene el Span actual
         try (Scope scope = span.makeCurrent()) {
-            span.setAttribute("linea: ", linea);
+            span.setAttribute("linea: ", linea); //Se agrega el atributo "linea"
 
             logger.info("Concultando usuario con linea: " + linea);
             Optional<ClientModel> response = this.userService.getById(linea);
-            String responseBody = objectMapper.writeValueAsString(response);
-            span.setAttribute("body.response", responseBody);
+
+            String responseBody = objectMapper.writeValueAsString(response);// Se connvierte el objeto a json string
+            span.setAttribute("body.response", responseBody);// Se agrega el 
 
             return response;
 
